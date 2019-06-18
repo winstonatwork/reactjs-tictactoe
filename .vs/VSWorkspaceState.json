@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\reactjs-tictactoe",
+    "\\reactjs-tictactoe\\src"
   ],
+  "SelectedNode": "\\reactjs-tictactoe\\src\\index.js",
   "PreviewInSolutionExplorer": false
 }
