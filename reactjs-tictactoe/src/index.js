@@ -65,12 +65,13 @@ class Game extends React.Component {
                 squares: Array(9).fill(null)
             }],
             xIsNext: true,
+            currentStepNumber: 0,
             winner: null
         };
     }
 
     handleClick(i) {
-        const history = this.state.history;
+        const history = this.state.history.slice(0, this.state.currentStepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
 
@@ -81,11 +82,20 @@ class Game extends React.Component {
         squares[i] = this.state.xIsNext ? 'X' : 'O';
 
         this.setState({
+            //using concat for immutability 
             history: history.concat([{
                 squares: squares
             }]),
             xIsNext: !this.state.xIsNext,
+            currentStepNumber: history.length,
             winner: calculateWinner(squares)
+        });
+    }
+
+    jumpTo(stepNumber) {
+        this.setState({
+            currentStepNumber: stepNumber,
+            xIsNext: (stepNumber % 2) === 0
         });
     }
 
@@ -95,6 +105,19 @@ class Game extends React.Component {
 
         this.state.winner = calculateWinner(current.squares);
 
+        //UPDATE HISTORY LIST
+        const moves = history.map((step, moveNumber) => {
+            const desc = moveNumber ?
+                'Go to move # ' + moveNumber :
+                'Go to game start';
+            return (
+                <li key={moveNumber} >
+                    <button onClick={() => this.jumpTo(moveNumber)}>{desc}</button>
+                </li>
+            );
+        });
+
+        //UPDATE STATUS
         let status;
         if (this.state.winner) {
             status = 'Winner: ' + this.state.winner;
@@ -114,7 +137,7 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{/* TODO */}</ol>
+                    <ol>{moves}</ol>
                 </div>
             </div>
         );
